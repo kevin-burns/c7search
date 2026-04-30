@@ -25,7 +25,7 @@ func newCacheCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			fmt.Fprintf(cmd.OutOrStdout(), "removed %d cached entries from %s\n", n, c.Dir)
+			_, _ = fmt.Fprintf(cmd.OutOrStdout(), "removed %d cached entries from %s\n", n, c.Dir)
 			return nil
 		},
 	})

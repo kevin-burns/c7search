@@ -45,13 +45,13 @@ func newAuthStatusCmd() *cobra.Command {
 
 			if err := c.Verify(ctx); err != nil {
 				if errors.Is(err, client.ErrUnauthorized) {
-					fmt.Fprintf(out, "status: invalid key\n")
+					_, _ = fmt.Fprintln(out, "status: invalid key")
 					return silentWrap(err)
 				}
-				fmt.Fprintf(out, "status: API unreachable (%v)\n", err)
+				_, _ = fmt.Fprintf(out, "status: API unreachable (%v)\n", err)
 				return silentWrap(err)
 			}
-			fmt.Fprintf(out, "status: ok\n")
+			_, _ = fmt.Fprintln(out, "status: ok")
 			return nil
 		},
 	}
