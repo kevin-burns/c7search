@@ -21,3 +21,8 @@
 # Per-user Claude Code state (permissions + locally-installed skill copy).
 # The canonical SKILL.md lives at skills/c7search/SKILL.md.
 .claude/
+
+# Project conventions for AI agents (per-developer, may contain personal
+# paths like Ogham binary location). Auto-loaded by Claude Code from the
+# working tree; not part of the public artifact.
+/CLAUDE.md
