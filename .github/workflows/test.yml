@@ -29,9 +29,9 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           # Pin to the patch declared in go.mod so a 1.26.0-cached toolchain
           # doesn't fail "module requires go >= 1.26.2" on a fresh runner.
@@ -47,8 +47,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
         with:
           # Pin to the patch declared in go.mod so a 1.26.0-cached toolchain
           # doesn't fail "module requires go >= 1.26.2" on a fresh runner.
