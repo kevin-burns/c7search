@@ -1,0 +1,15 @@
+# gitleaks config for c7search.
+#
+# Default ruleset (~160 patterns: AWS, GCP, Stripe, postgres URLs, GitHub
+# tokens, Anthropic, OpenAI, etc.) plus an allowlist for test fixtures
+# that contain plausibly-shaped-but-fake API keys.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Unit-test fixtures with fake-but-pattern-matching placeholders"
+paths = [
+    '''internal/client/client_test\.go''',
+    '''internal/redact/redact_test\.go''',
+    '''\.notes/.*''',
+]

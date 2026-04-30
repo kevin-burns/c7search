@@ -1,0 +1,23 @@
+# Binaries
+/c7search
+/c7search.exe
+/dist/
+
+# Test / coverage artefacts
+/coverage.out
+/coverage.html
+/cover.out
+/cover.html
+/.coverage/
+
+# Local scratch — API probe captures, design notes, throwaway scripts
+/.notes/
+
+# IDE / OS noise
+.vscode/
+.idea/
+.DS_Store
+
+# Per-user Claude Code state (permissions + locally-installed skill copy).
+# The canonical SKILL.md lives at skills/c7search/SKILL.md.
+.claude/

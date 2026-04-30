@@ -1,0 +1,85 @@
+version: 2
+
+# GoReleaser pipeline for c7search. Fires on vX.Y.Z tag push via the
+# release.yml workflow.
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - main: .
+    binary: c7search
+    env:
+      - CGO_ENABLED=0
+    flags:
+      # Reproducible builds: strip local filesystem paths from the binary
+      # so every contributor produces the same artifact.
+      - -trimpath
+    ldflags:
+      # Strip symbol table + DWARF debug info (~30% size reduction).
+      - -s -w
+      # Stamp version/commit/date into internal/version so `c7search version`
+      # and the User-Agent header are meaningful for incident response.
+      - -X github.com/kevin-burns/c7search/internal/version.Version={{.Version}}
+      - -X github.com/kevin-burns/c7search/internal/version.Commit={{.ShortCommit}}
+      - -X github.com/kevin-burns/c7search/internal/version.BuildDate={{.Date}}
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      # Revisit when Go declares windows/arm64 a tier-1 platform.
+      - goos: windows
+        goarch: arm64
+
+archives:
+  - formats: ['tar.gz']
+    format_overrides:
+      - goos: windows
+        formats: ['zip']
+    name_template: >-
+      {{ .ProjectName }}-{{ .Os }}-{{ .Arch }}
+    files:
+      - README.md
+      - LICENSE*
+      - SECURITY.md
+
+checksum:
+  name_template: 'checksums.txt'
+  algorithm: sha256
+
+# TODO(v0.2): enable cosign keyless OIDC signing.
+# signs:
+#   - cmd: cosign
+#     stdin: '{{ .Env.COSIGN_PASSWORD }}'
+#     args:
+#       - sign-blob
+#       - --output-signature=${signature}
+#       - --output-certificate=${certificate}
+#       - ${artifact}
+
+changelog:
+  sort: asc
+  use: github
+  groups:
+    - title: Features
+      regexp: '^.*?feat(\(.+\))??!?:.+$'
+      order: 0
+    - title: Bug fixes
+      regexp: '^.*?fix(\(.+\))??!?:.+$'
+      order: 1
+    - title: Documentation
+      regexp: '^.*?docs(\(.+\))??!?:.+$'
+      order: 2
+    - title: Other
+      order: 999
+  filters:
+    exclude:
+      - '^test:'
+      - '^chore:'
+      - 'merge conflict'

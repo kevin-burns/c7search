@@ -1,0 +1,27 @@
+version: "2"
+
+linters:
+  enable:
+    - gosec
+    - errcheck
+    - govet
+    - staticcheck
+
+  settings:
+    gosec:
+      excludes:
+        # G304: file path from variable -- cache files use os.UserCacheDir
+        # plus a hashed key derived from sanitized inputs, not user input.
+        - G304
+        # G404: weak rng -- the only math/rand use is jitter on retry
+        # backoff, which is not a security boundary.
+        - G404
+
+  exclusions:
+    rules:
+      # test files: ignore errcheck and gosec (test data, not production)
+      - linters: [errcheck, gosec]
+        path: _test\.go$
+    paths:
+      - vendor
+      - .notes
