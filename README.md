@@ -84,6 +84,51 @@ c7search version
 your machine, so it never receives the `com.apple.quarantine` extended
 attribute that browsers and `curl` set on downloaded files.
 
+#### Troubleshooting: `c7search: command not found` after `go install`
+
+The most common cause on macOS: the install succeeded, but
+`$GOPATH/bin` isn't on your `$PATH`. The binary is sitting in
+`~/go/bin/c7search` and your shell can't see it. Three quick checks:
+
+```bash
+# 1. Where does Go put binaries on your machine?
+go env GOBIN GOPATH
+# If GOBIN is set, the binary is in $GOBIN.
+# If GOBIN is empty, it's in $(go env GOPATH)/bin (typically ~/go/bin).
+
+# 2. Does the binary actually exist?
+ls -l "$(go env GOPATH)/bin/c7search"
+# Expected: -rwxr-xr-x ... ~/go/bin/c7search
+
+# 3. Is that directory on your PATH?
+echo "$PATH" | tr ':' '\n' | grep -E '(/go/bin|GOBIN)'
+# If empty, that's your problem — fix below.
+```
+
+If the binary exists but isn't on `$PATH`:
+
+```bash
+echo 'export PATH="$(go env GOPATH)/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+which c7search        # should print ~/go/bin/c7search
+c7search version
+```
+
+If the binary doesn't exist, the install failed silently. Re-run with
+`-v`:
+
+```bash
+go install -v github.com/kevin-burns/c7search@v0.1.0 2>&1 | tail -20
+```
+
+Common failure modes:
+
+- **Corporate proxy** blocking `proxy.golang.org` →
+  `GOPROXY=direct go install github.com/kevin-burns/c7search@v0.1.0`
+  (slower, bypasses the module proxy).
+- **`~/go` owned by root** from a previous `sudo go install` →
+  `sudo chown -R "$USER" ~/go`.
+
 ### From a release binary
 
 Use this path if you don't have Go installed, or you want exactly the
