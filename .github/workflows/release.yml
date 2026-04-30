@@ -10,6 +10,13 @@ permissions:
   contents: write          # for creating the GitHub release
   # id-token: write        # uncomment when cosign keyless signing is enabled (v0.2)
 
+# Releases are tag-triggered; only one tag can be active at a time, so
+# the concurrency group is degenerate, but keeping it explicit prevents
+# accidental concurrent re-pushes of the same tag from racing.
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 

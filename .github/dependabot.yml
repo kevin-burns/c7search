@@ -1,0 +1,39 @@
+# Dependabot keeps Go modules and GitHub Actions versions current. Without
+# it, action-version drift becomes a silent breakage source (cf. our v6 ->
+# v7 golangci-lint-action bump). Weekly cadence keeps the noise low.
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: Europe/London
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+      include: scope
+    groups:
+      go-stdlib-x:
+        patterns:
+          - "golang.org/x/*"
+      cobra-stack:
+        patterns:
+          - "github.com/spf13/*"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "08:00"
+      timezone: Europe/London
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+      include: scope
+    groups:
+      actions-core:
+        patterns:
+          - "actions/*"

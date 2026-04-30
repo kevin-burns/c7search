@@ -6,8 +6,16 @@ on:
   pull_request:
     branches: ['**']
 
+# Top-level permissions are read-only by default; individual jobs can
+# escalate where they actually need write (none of these do).
 permissions:
   contents: read
+
+# Cancel an in-flight run for the same ref when a new push lands. Keeps
+# the queue short and saves CI minutes on busy days.
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
@@ -47,7 +55,10 @@ jobs:
           go-version-file: go.mod
           cache: true
       # v7+ is required for golangci-lint v2.x — the v6 action only
-      # parses v1.x version strings.
+      # parses v1.x version strings. The version below must be one that's
+      # been built with a Go toolchain >= the one in go.mod, otherwise
+      # golangci-lint refuses to load: "the Go language version used to
+      # build golangci-lint is lower than the targeted Go version".
       - uses: golangci/golangci-lint-action@v7
         with:
-          version: v2.1.6
+          version: v2.11.4
