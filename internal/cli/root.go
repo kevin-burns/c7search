@@ -68,7 +68,7 @@ func run(stdout, stderr io.Writer, args []string) int {
 		// printed "status: invalid key"). They surface errSilent to keep
 		// classify() honest without producing duplicate stderr noise.
 		if !errors.Is(err, errSilent) {
-			fmt.Fprintln(stderr, "error:", err)
+			_, _ = fmt.Fprintln(stderr, "error:", err)
 		}
 		return classify(err)
 	}
@@ -125,7 +125,7 @@ var newCacheStore = func(cmd *cobra.Command) *cache.FS {
 	c, err := cache.New()
 	if err != nil {
 		if debugFlag(cmd) {
-			fmt.Fprintln(cmd.ErrOrStderr(), "cache disabled:", err)
+			_, _ = fmt.Fprintln(cmd.ErrOrStderr(), "cache disabled:", err)
 		}
 		return nil
 	}

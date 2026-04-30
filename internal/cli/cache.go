@@ -37,7 +37,7 @@ func newCacheCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			fmt.Fprintln(cmd.OutOrStdout(), c.Dir)
+			_, _ = fmt.Fprintln(cmd.OutOrStdout(), c.Dir)
 			return nil
 		},
 	})

@@ -40,7 +40,7 @@ func newAskCmd() *cobra.Command {
 				return err
 			}
 
-			fmt.Fprintf(cmd.ErrOrStderr(), "resolved: %s  (trust=%.1f, snippets=%d)\n",
+			_, _ = fmt.Fprintf(cmd.ErrOrStderr(), "resolved: %s  (trust=%.1f, snippets=%d)\n",
 				pick.ID, pick.TrustScore, pick.TotalSnippets)
 
 			format := resolveFormat(cmd, output.FormatMarkdown)

@@ -44,7 +44,10 @@ func IsTTY(f *os.File) bool {
 	if f == nil {
 		return false
 	}
-	return term.IsTerminal(int(f.Fd()))
+	// File descriptors are POSIX small ints (kernel-managed, < RLIMIT_NOFILE
+	// which itself fits comfortably in int32). The uintptr -> int cast is
+	// safe in practice; gosec G115 flags it categorically.
+	return term.IsTerminal(int(f.Fd())) //nolint:gosec
 }
 
 // useColor decides whether to emit ANSI; respects the NO_COLOR convention.

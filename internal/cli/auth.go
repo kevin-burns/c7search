@@ -36,8 +36,8 @@ func newAuthStatusCmd() *cobra.Command {
 				source = "$CONTEXT7_API_KEY"
 			}
 
-			fmt.Fprintf(out, "key:    %s\n", redact.RedactAPIKey(key))
-			fmt.Fprintf(out, "source: %s\n", source)
+			_, _ = fmt.Fprintf(out, "key:    %s\n", redact.RedactAPIKey(key))
+			_, _ = fmt.Fprintf(out, "source: %s\n", source)
 
 			c := newAPIClient(cmd)
 			ctx, cancel := context.WithTimeout(cmd.Context(), client.TimeoutAuth)
