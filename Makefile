@@ -1,6 +1,6 @@
 VERSION ?= dev
 
-.PHONY: build test test-race lint vuln secrets-scan cover cover-html fuzz tidy clean precommit-install
+.PHONY: build test test-race lint vuln secrets-scan cover cover-html fuzz tidy clean precommit-install precommit-run
 
 build:
 	go build -trimpath -ldflags "-s -w -X github.com/kevin-burns/c7search/internal/version.Version=$(VERSION)" -o c7search .
@@ -54,5 +54,18 @@ clean:
 	rm -f c7search c7search.exe coverage.out coverage.html
 	rm -rf dist/
 
+# Pre-commit hook runner. Prefers prek (Rust, fast) when available;
+# falls back to the canonical Python pre-commit.
 precommit-install:
-	pre-commit install
+	@if command -v prek >/dev/null 2>&1; then \
+		prek install; \
+	else \
+		pre-commit install; \
+	fi
+
+precommit-run:
+	@if command -v prek >/dev/null 2>&1; then \
+		prek run --all-files; \
+	else \
+		pre-commit run --all-files; \
+	fi

@@ -419,12 +419,23 @@ make cover       # 70% coverage gate
 make fuzz        # opt-in fuzz harness for parsers
 ```
 
-Quality gates also run via pre-commit:
+Quality gates also run via pre-commit hooks. The repo uses
+[`prek`](https://github.com/j178/prek) when available (Rust, faster cold
+start) and falls back to the canonical Python `pre-commit` otherwise:
 
 ```bash
-pip install pre-commit  # or pipx install pre-commit
-make precommit-install
+# install one of the two runners
+brew install prek                         # recommended
+# or: pipx install pre-commit             # canonical fallback
+
+make precommit-install                    # wires the git hook
+make precommit-run                        # runs every hook over all files
 ```
+
+Hooks configured in `.pre-commit-config.yaml`: `go fmt`, `go vet`,
+`go-build`, `golangci-lint`, trailing-whitespace / end-of-file fixers,
+large-file guard, private-key detector, and `gitleaks` for broad-spectrum
+secret scanning.
 
 ## Acknowledgements
 
