@@ -50,14 +50,17 @@ func TestContract_ResolveJSON(t *testing.T) {
 }
 
 // TestContract_DocsJSON_Snippets pins the public --json shape for
-// `docs` when the upstream returns structured snippets. The v2 endpoint
-// returns libraryId with a leading slash; downstream consumers should
-// expect either form.
+// `docs` when the upstream returns structured snippets. Note the two
+// distinct keys: the upstream API delivers the array under
+// "codeSnippets" (mirrored in the fixture below), while our own --json
+// output re-keys it to "snippets" — the latter is the contract
+// downstream jq scripts depend on. The v2 endpoint returns libraryId
+// with a leading slash; downstream consumers should expect either form.
 func TestContract_DocsJSON_Snippets(t *testing.T) {
 	f := newFakeAPI(t)
 	f.handle(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"snippets":[{
+		_, _ = w.Write([]byte(`{"codeSnippets":[{
 			"codeTitle":"hello",
 			"codeLanguage":"go",
 			"codeList":[{"language":"go","code":"package main"}]

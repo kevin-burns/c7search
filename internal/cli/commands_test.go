@@ -261,7 +261,7 @@ func TestDocs_JSONFormat(t *testing.T) {
 			t.Errorf("expected type=json, got %s", r.URL.Query().Get("type"))
 		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"snippets":[{"codeTitle":"x","codeLanguage":"go","codeList":[]}]}`))
+		_, _ = w.Write([]byte(`{"codeSnippets":[{"codeTitle":"x","codeLanguage":"go","codeList":[]}]}`))
 	})
 
 	var stdout bytes.Buffer
