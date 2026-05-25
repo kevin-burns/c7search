@@ -28,7 +28,7 @@ public API. If your client supports MCP, use the upstream
 
 | You have… | Run | Quarantine? |
 |---|---|---|
-| Go ≥ 1.26.2 | `go install github.com/kevin-burns/c7search@latest` | **No** — recommended for macOS |
+| Go ≥ 1.26.3 | `go install github.com/kevin-burns/c7search@latest` | **No** — recommended for macOS |
 | `brew` (when tap is published) | `brew install kevin-burns/tap/c7search` | No — Homebrew clears it |
 | Just a release `.tar.gz` | Extract, move onto `$PATH`, then on macOS run `xattr -d` + `codesign -` (see below) | Yes — needs the manual step |
 
@@ -65,7 +65,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 ### From source (recommended on macOS — no quarantine)
 
-Requires Go ≥ 1.26.2.
+Requires Go ≥ 1.26.3.
 
 ```bash
 go install github.com/kevin-burns/c7search@latest
