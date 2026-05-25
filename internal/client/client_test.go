@@ -129,7 +129,7 @@ func TestDocs_JSONHappy(t *testing.T) {
 			t.Errorf("expected type=json")
 		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"snippets":[{"codeTitle":"hello","codeLanguage":"go","codeList":[{"language":"go","code":"package main"}]}]}`))
+		_, _ = w.Write([]byte(`{"codeSnippets":[{"codeTitle":"hello","codeLanguage":"go","codeList":[{"language":"go","code":"package main"}]}]}`))
 	})
 
 	doc, err := c.Docs(context.Background(), "vercel/next.js", DocsOptions{Format: "json"})
@@ -181,7 +181,7 @@ func TestDocsV2_JSONHappy(t *testing.T) {
 			t.Errorf("expected type=json")
 		}
 		w.Header().Set("Content-Type", "application/json")
-		_, _ = w.Write([]byte(`{"snippets":[{"codeTitle":"hi","codeLanguage":"go","codeList":[]}]}`))
+		_, _ = w.Write([]byte(`{"codeSnippets":[{"codeTitle":"hi","codeLanguage":"go","codeList":[]}]}`))
 	})
 	doc, err := c.DocsV2(context.Background(), "/a/b", DocsOptions{Format: "json"})
 	if err != nil {

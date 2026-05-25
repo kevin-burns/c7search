@@ -64,6 +64,12 @@ type DocCodeBlock struct {
 	Code     string `json:"code"`
 }
 
+// docsJSONResponse is the on-the-wire envelope from
+// /api/v2/context?type=json. The array key is "codeSnippets" (the
+// response also carries an "infoSnippets" array we don't surface) —
+// confirmed against the live Context7 API. A leading "snippets" tag
+// here silently decodes to an empty slice, which is what broke
+// `docs --json` historically.
 type docsJSONResponse struct {
-	Snippets []DocSnippet `json:"snippets"`
+	Snippets []DocSnippet `json:"codeSnippets"`
 }
