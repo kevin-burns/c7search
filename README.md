@@ -477,10 +477,13 @@ make precommit-install                    # wires the git hook
 make precommit-run                        # runs every hook over all files
 ```
 
-Hooks configured in `.pre-commit-config.yaml`: `go fmt`, `go vet`,
-`go-build`, `golangci-lint`, trailing-whitespace / end-of-file fixers,
+Hooks configured in `.pre-commit-config.yaml`: `go-fmt`, module-scoped
+`go-vet-mod` and `go-build-mod` (Go tooling reasons about packages, not
+single files), `golangci-lint`, trailing-whitespace / end-of-file fixers,
 large-file guard, private-key detector, and `gitleaks` for broad-spectrum
-secret scanning.
+secret scanning. The Go hooks come from the maintained
+[`TekWizely/pre-commit-golang`](https://github.com/TekWizely/pre-commit-golang)
+(the older `dnephin/pre-commit-golang` was archived in 2023).
 
 ## Acknowledgements
 
