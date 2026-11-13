@@ -1,12 +1,17 @@
 name: security
 
 # Separate from test.yml so a flaky vuln scan doesn't block unrelated
-# debugging. Same triggers, separate signal.
+# debugging. Same triggers as test.yml, plus a weekly run: new Go standard-
+# library advisories land without any commit here, and between May and
+# November 2026 eighteen accumulated unnoticed because nothing pushed.
 on:
   push:
     branches: ['**']
   pull_request:
     branches: ['**']
+  schedule:
+    - cron: '0 6 * * 1'   # Mondays 06:00 UTC
+  workflow_dispatch:
 
 permissions:
   contents: read
