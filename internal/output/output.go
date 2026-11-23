@@ -7,7 +7,8 @@
 package output
 
 import (
-	"encoding/json"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"fmt"
 	"io"
 	"os"
@@ -68,9 +69,7 @@ func RenderLibraries(w io.Writer, libs []client.Library, f Format, limit int) er
 	}
 	switch f {
 	case FormatJSON:
-		enc := json.NewEncoder(w)
-		enc.SetIndent("", "  ")
-		return enc.Encode(libs)
+		return writeJSON(w, libs)
 	default:
 		return renderLibrariesText(w, libs, useColor(w))
 	}
@@ -112,17 +111,15 @@ func renderLibrariesText(w io.Writer, libs []client.Library, color bool) error {
 func RenderDoc(w io.Writer, doc client.Doc, f Format) error {
 	switch f {
 	case FormatJSON:
-		enc := json.NewEncoder(w)
-		enc.SetIndent("", "  ")
 		// Prefer the structured snippets if we have them; otherwise wrap text.
 		if len(doc.Snippets) > 0 {
-			return enc.Encode(map[string]any{
+			return writeJSON(w, map[string]any{
 				"libraryId": doc.LibraryID,
 				"format":    "json",
 				"snippets":  doc.Snippets,
 			})
 		}
-		return enc.Encode(map[string]any{
+		return writeJSON(w, map[string]any{
 			"libraryId": doc.LibraryID,
 			"format":    doc.Format,
 			"body":      doc.Body,
@@ -133,4 +130,25 @@ func RenderDoc(w io.Writer, doc client.Doc, f Format) error {
 		_, err := fmt.Fprint(w, doc.Body)
 		return err
 	}
+}
+
+// writeJSON writes v as indented JSON plus a trailing newline, the shape
+// json.Encoder produced before the move to encoding/json/v2.
+//
+// Two v1 behaviours are kept on purpose and one is not:
+//   - Deterministic: v2 does not sort map keys by default; v1 did, and
+//     RenderDoc encodes a map, so without it the key order would vary run
+//     to run.
+//   - v2 marshals a nil slice as [] instead of null (e.g. a library with no
+//     versions). Accepted: both decode to "no items" and [] is what most
+//     JSON consumers expect.
+//   - v2 does not escape <, > and & as \u003c etc. Accepted: the output is
+//     not embedded in HTML, and code snippets become readable.
+func writeJSON(w io.Writer, v any) error {
+	b, err := json.Marshal(v, jsontext.WithIndent("  "), json.Deterministic(true))
+	if err != nil {
+		return err
+	}
+	_, err = w.Write(append(b, '\n'))
+	return err
 }

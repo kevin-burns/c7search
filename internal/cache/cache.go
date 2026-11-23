@@ -10,7 +10,8 @@ package cache
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"encoding/json"
+	"encoding/json/jsontext"
+	"encoding/json/v2"
 	"errors"
 	"fmt"
 	"os"
@@ -21,10 +22,10 @@ import (
 // Envelope wraps every cached value so we can evolve the schema without
 // blowing up old caches — a v-mismatch is treated as a miss.
 type Envelope struct {
-	V         int             `json:"v"`
-	FetchedAt time.Time       `json:"fetched_at"`
-	TTL       int             `json:"ttl_seconds"`
-	Body      json.RawMessage `json:"body"`
+	V         int            `json:"v"`
+	FetchedAt time.Time      `json:"fetched_at"`
+	TTL       int            `json:"ttl_seconds"`
+	Body      jsontext.Value `json:"body"`
 }
 
 const schemaVersion = 1
