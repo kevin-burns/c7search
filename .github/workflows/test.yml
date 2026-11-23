@@ -61,4 +61,4 @@ jobs:
       # build golangci-lint is lower than the targeted Go version".
       - uses: golangci/golangci-lint-action@v9
         with:
-          version: v2.11.4
+          version: v2.15.0
